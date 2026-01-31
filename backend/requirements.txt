@@ -1,0 +1,14 @@
+flask
+flask-sqlalchemy
+flask-migrate
+flask-cors
+flask-jwt-extended
+alembic
+python-dotenv
+psycopg2-binary
+face-recognition
+numpy
+opencv-python-headless
+dlib
+pytest
+waitress
