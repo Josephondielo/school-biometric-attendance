@@ -1,9 +1,19 @@
-from sqlalchemy import Column, Integer, ForeignKey, LargeBinary
-from app.db import Base
+from app.extensions import db
 
-class Embedding(Base):
+class Embedding(db.Model):
     __tablename__ = "embeddings"
 
-    id = Column(Integer, primary_key=True, index=True)
-    student_id = Column(Integer, ForeignKey("students.id"))
-    vector = Column(LargeBinary) # Storing numpy array as bytes or specific vector DB logic
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    student_id = db.Column(
+        db.Integer,
+        db.ForeignKey("students.id"),
+        nullable=True,
+        index=True
+    )
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=True,
+        index=True
+    )
+    vector = db.Column(db.LargeBinary, nullable=False)

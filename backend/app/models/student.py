@@ -1,11 +1,11 @@
-from sqlalchemy import Column, Integer, String, Boolean
-from app.db import Base
+from app.extensions import db
 
-class Student(Base):
+class Student(db.Model):
     __tablename__ = "students"
 
-    id = Column(Integer, primary_key=True, index=True)
-    first_name = Column(String, index=True)
-    last_name = Column(String, index=True)
-    admission_number = Column(String, unique=True, index=True)
-    is_active = Column(Boolean, default=True)
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    first_name = db.Column(db.String(100), nullable=False, index=True)
+    last_name = db.Column(db.String(100), nullable=False, index=True)
+    admission_number = db.Column(db.String(50), unique=True, nullable=False, index=True)
+    role = db.Column(db.String(20), nullable=False, default="STUDENT")
+    is_active = db.Column(db.Boolean, default=True)

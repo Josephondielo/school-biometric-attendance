@@ -1,7 +1,10 @@
 import os
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev_secret_key'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://user:password@localhost/school_biometrics'
+    SECRET_KEY = os.environ.get("SECRET_KEY", "dev_secret_key")
+
+    SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'jwt_dev_secret'
+
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "jwt_dev_secret")
