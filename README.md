@@ -1,3 +1,4 @@
+
 # School Biometrics Attendance System
 
 A professional, high-fidelity biometric attendance solution built with **Flask** and **React**. This system leverages face recognition technology to provide secure and efficient attendance tracking for students and system users.
@@ -36,3 +37,17 @@ A professional, high-fidelity biometric attendance solution built with **Flask**
 
 ## 🛡️ Security
 The system uses JWT (JSON Web Tokens) for secure API authentication and standardizes communication over local network bindings (`127.0.0.1`).
+
+# Connecting With github
+- Creat the root folder e.g school-biometric-attendance
+- Creat a readme.md file inside it
+- Creat a .gitignore (Prevents secrets,virtualenvs,& node modules from uploaded.)
+- in the product folder:
+
+        git init
+        git add .
+        git commit -m "Initial commit: school biometric attendance system"
+        
+- Go to github and Click ➕ New repository
+- Write the repository name : root folder
+- 
