@@ -40,12 +40,8 @@ def find_best_match(known_embeddings, unknown_encoding, tolerance=0.6):
     best_match_index = np.argmin(face_distances)
     min_distance = face_distances[best_match_index]
     
-    print(f"🔍 Best match distance: {min_distance:.4f} (Threshold: {tolerance})")
-    
     # Check if the best match is within the tolerance
     if min_distance < tolerance:
-        print(f"✅ Match found for student_id: {known_embeddings[best_match_index].student_id}")
         return known_embeddings[best_match_index]
         
-    print("❌ No match found within tolerance.")
     return None

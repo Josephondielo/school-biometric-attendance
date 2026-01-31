@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from app.models.user import User
 from app.extensions import db
 from flask_jwt_extended import create_access_token, jwt_required
@@ -30,15 +30,15 @@ def login():
                 "error": "Username and password are required"
             }), 400
 
-        print(f"🔑 Login attempt for: {username}")
+        current_app.logger.info(f"🔑 Login attempt for: {username}")
         user = User.query.filter_by(username=username).first()
 
         if not user:
-            print(f"❌ User not found: {username}")
+            current_app.logger.warning(f"❌ User not found: {username}")
             return jsonify({"error": "Invalid credentials"}), 401
 
         if not check_password_hash(user.password_hash, password):
-            print(f"❌ Password mismatch for: {username}")
+            current_app.logger.warning(f"❌ Password mismatch for: {username}")
             return jsonify({"error": "Invalid credentials"}), 401
 
         access_token = create_access_token(
@@ -48,7 +48,7 @@ def login():
             }
         )
         
-        print(f"✅ Login successful for: {username}")
+        current_app.logger.info(f"✅ Login successful for: {username}")
 
         return jsonify({
             "access_token": access_token,

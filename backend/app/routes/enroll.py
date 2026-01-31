@@ -143,3 +143,42 @@ def get_students():
     except Exception as e:
         current_app.logger.error(f"❌ Fetch Error: {str(e)}")
         return jsonify({"error": "Failed to fetch students"}), 500
+
+
+@bp.route("/student/<int:student_id>", methods=["DELETE"])
+@jwt_required()
+def delete_student(student_id):
+    """
+    Delete a student and all associated records (Attendances, Embeddings).
+    ADMIN ONLY
+    """
+    identity = get_jwt_identity()
+    if identity.get("role") != "admin":
+        return jsonify({"error": "Admin access required"}), 403
+
+    try:
+        student = Student.query.get(student_id)
+        if not student:
+            return jsonify({"error": "Student not found"}), 404
+
+        # 1. Delete associated attendances (if not cascaded by DB)
+        from app.models.attendance import Attendance
+        Attendance.query.filter_by(student_id=student_id).delete()
+
+        # 2. Delete associated embeddings
+        Embedding.query.filter_by(student_id=student_id).delete()
+
+        # 3. Delete student record
+        db.session.delete(student)
+        db.session.commit()
+
+        current_app.logger.info(f"🗑️ Student deleted (ID: {student_id}) and all records cleared.")
+        return jsonify({
+            "success": True, 
+            "message": f"Student deleted successfully."
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"❌ Deletion Error: {str(e)}")
+        return jsonify({"error": f"Deletion failed: {str(e)}"}), 500

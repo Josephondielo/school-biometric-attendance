@@ -247,7 +247,40 @@ def export_attendance():
             query = query.filter(Attendance.student_id == student_id_param)
             
         records = query.all()
+
+        # Handle CSV Export
+        format_param = request.args.get("format", "json")
+        if format_param == "csv":
+            import io
+            import csv
+            from flask import make_response
+            
+            output = io.StringIO()
+            writer = csv.writer(output)
+            
+            # Header
+            writer.writerow(["ID", "Student Name", "Admission Number", "Date", "Time", "Status"])
+            
+            for att, stu in records:
+                writer.writerow([
+                    att.id,
+                    f"{stu.first_name} {stu.last_name}",
+                    stu.admission_number,
+                    att.timestamp.strftime("%Y-%m-%d"),
+                    att.timestamp.strftime("%I:%M %p"),
+                    att.status
+                ])
+            
+            response = make_response(output.getvalue())
+            filename = f"report_{range_param}"
+            if student_id_param:
+                filename = f"student_{student_id_param}_report"
+                
+            response.headers["Content-Disposition"] = f"attachment; filename={filename}.csv"
+            response.headers["Content-type"] = "text/csv"
+            return response
         
+        # Default JSON response (legacy format)
         export_data = []
         for att, stu in records:
             export_data.append({

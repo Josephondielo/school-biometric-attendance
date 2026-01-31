@@ -8,7 +8,7 @@ def create_default_admin():
     if not admin:
         admin = User(
             username="admin",
-            password=generate_password_hash("admin123"),
+            password_hash=generate_password_hash("admin123"),
             role="admin"
         )
         db.session.add(admin)

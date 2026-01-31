@@ -1,0 +1,42 @@
+
+--- ERROR AT Traceback (most recent call last):
+  File "/mnt/c/Users/Hp/Development/code/My-Projects/school-biometrics-attendance/backend/app/routes/auth.py", line 33, in login
+    current_app.logger.info(f"🔑 Login attempt for: {username}")
+NameError: name 'current_app' is not defined
+ ---
+name 'current_app' is not defined
+
+--- ERROR AT Traceback (most recent call last):
+  File "/mnt/c/Users/Hp/Development/code/My-Projects/school-biometrics-attendance/backend/app/routes/auth.py", line 33, in login
+    current_app.logger.info(f"🔑 Login attempt for: {username}")
+NameError: name 'current_app' is not defined
+ ---
+name 'current_app' is not defined
+
+--- ERROR AT Traceback (most recent call last):
+  File "/mnt/c/Users/Hp/Development/code/My-Projects/school-biometrics-attendance/backend/app/routes/auth.py", line 33, in login
+    current_app.logger.info(f"🔑 Login attempt for: {username}")
+NameError: name 'current_app' is not defined
+ ---
+name 'current_app' is not defined
+
+--- ERROR AT Traceback (most recent call last):
+  File "/mnt/c/Users/Hp/Development/code/My-Projects/school-biometrics-attendance/backend/app/routes/auth.py", line 33, in login
+    current_app.logger.info(f"🔑 Login attempt for: {username}")
+NameError: name 'current_app' is not defined
+ ---
+name 'current_app' is not defined
+
+--- ERROR AT Traceback (most recent call last):
+  File "/mnt/c/Users/Hp/Development/code/My-Projects/school-biometrics-attendance/backend/app/routes/auth.py", line 33, in login
+    current_app.logger.info(f"🔑 Login attempt for: {username}")
+NameError: name 'current_app' is not defined
+ ---
+name 'current_app' is not defined
+
+--- ERROR AT Traceback (most recent call last):
+  File "/mnt/c/Users/Hp/Development/code/My-Projects/school-biometrics-attendance/backend/app/routes/auth.py", line 33, in login
+    current_app.logger.info(f"🔑 Login attempt for: {username}")
+NameError: name 'current_app' is not defined
+ ---
+name 'current_app' is not defined
