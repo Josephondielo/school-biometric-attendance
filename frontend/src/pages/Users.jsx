@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   SlidersHorizontal,
@@ -20,6 +21,7 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,7 +118,11 @@ const Users = () => {
           </div>
         </div>
 
-        <Button variant="ghost" className="bg-card-bg w-10 h-10 rounded-full p-0">
+        <Button
+          variant="ghost"
+          className="bg-card-bg w-10 h-10 rounded-full p-0"
+          onClick={() => toast.success("Filters panel coming soon!")}
+        >
           <SlidersHorizontal size={18} />
         </Button>
       </div>
@@ -227,7 +233,10 @@ const Users = () => {
       </div>
 
       {/* Floating Action Button */}
-      <button className="fixed bottom-24 right-6 w-14 h-14 bg-primary hover:bg-primary-hover text-white rounded-2xl shadow-xl shadow-primary/40 flex items-center justify-center">
+      <button
+        onClick={() => navigate("/enroll")}
+        className="fixed bottom-24 right-6 w-14 h-14 bg-primary hover:bg-primary-hover text-white rounded-2xl shadow-xl shadow-primary/40 flex items-center justify-center transition-transform active:scale-95"
+      >
         <Plus size={28} />
       </button>
     </div>
