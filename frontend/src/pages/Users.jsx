@@ -21,6 +21,8 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [sortOrder, setSortOrder] = useState("newest"); // newest, name-asc, name-desc
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -100,6 +102,15 @@ const Users = () => {
       (user.name || "").toLowerCase().includes(query) ||
       (user.desc || "").toLowerCase().includes(query)
     );
+  }).sort((a, b) => {
+    if (sortOrder === "name-asc") return a.name.localeCompare(b.name);
+    if (sortOrder === "name-desc") return b.name.localeCompare(a.name);
+    if (sortOrder === "newest") {
+      const idA = parseInt(a.id.split("-")[1]) || 0;
+      const idB = parseInt(b.id.split("-")[1]) || 0;
+      return idB - idA;
+    }
+    return 0;
   });
 
   return (
@@ -120,12 +131,45 @@ const Users = () => {
 
         <Button
           variant="ghost"
-          className="bg-card-bg w-10 h-10 rounded-full p-0"
-          onClick={() => toast.success("Filters panel coming soon!")}
+          className={`w-10 h-10 rounded-full p-0 transition-colors ${showFilters ? "bg-primary text-white" : "bg-card-bg text-gray-400"}`}
+          onClick={() => setShowFilters(!showFilters)}
         >
           <SlidersHorizontal size={18} />
         </Button>
       </div>
+
+      {/* Filter Options Panel */}
+      {showFilters && (
+        <Card className="mb-6 p-4 border border-primary/20 bg-primary/5 animate-in slide-in-from-top duration-200">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sort By</h4>
+            <button
+              onClick={() => setShowFilters(false)}
+              className="text-gray-500 hover:text-white transition-transform active:rotate-180"
+            >
+              <Plus size={14} className="rotate-45" />
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: "newest", label: "Newest First" },
+              { id: "name-asc", label: "Name (A-Z)" },
+              { id: "name-desc", label: "Name (Z-A)" },
+            ].map((option) => (
+              <button
+                key={option.id}
+                onClick={() => setSortOrder(option.id)}
+                className={`text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-all ${sortOrder === option.id
+                    ? "bg-primary border-primary text-white shadow-lg shadow-primary/20"
+                    : "border-white/5 text-gray-500 bg-card-bg hover:border-white/10"
+                  }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* Search */}
       <div className="relative mb-6">
