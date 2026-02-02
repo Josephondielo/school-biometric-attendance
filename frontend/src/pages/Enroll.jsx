@@ -42,7 +42,8 @@ const Enroll = () => {
     }
 
     setLoading(true);
-    const loadingToast = toast.loading("Enrolling student...");
+    const roleLabel = formData.role.charAt(0) + formData.role.slice(1).toLowerCase();
+    const loadingToast = toast.loading(`Enrolling ${roleLabel}...`);
 
     try {
       const blob = dataURLtoBlob(imageSrc);
@@ -56,7 +57,7 @@ const Enroll = () => {
 
       const response = await api.post("/enroll/student", data);
 
-      toast.success("Enrollment successful!", { id: loadingToast });
+      toast.success(`${roleLabel} enrolled successfully!`, { id: loadingToast });
       setTimeout(() => navigate("/users"), 1000);
     } catch (err) {
       const errorMsg = err.response?.data?.error || err.message || "Enrollment failed";

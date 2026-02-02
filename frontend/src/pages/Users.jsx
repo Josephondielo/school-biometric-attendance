@@ -7,6 +7,8 @@ import {
   ChevronRight,
   ShieldAlert,
   Award,
+  Download,
+  Trash2,
 } from "lucide-react";
 
 import { Card } from "../components/ui/Card";
@@ -113,6 +115,51 @@ const Users = () => {
     return 0;
   });
 
+  const handleDelete = async (user) => {
+    const isStudent = user.id.startsWith("student-");
+    if (!isStudent) {
+      toast.error("Only student records can be deleted from here.");
+      return;
+    }
+
+    if (!window.confirm(`Are you sure you want to delete ${user.name}? This will remove all their biometric data and attendance records.`)) {
+      return;
+    }
+
+    try {
+      await api.delete(`/enroll/student/${user.realId}`);
+      toast.success("Student deleted successfully");
+      setUsers(users.filter(u => u.id !== user.id));
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Failed to delete student");
+    }
+  };
+
+  const handleDownloadReport = async (user) => {
+    const isStudent = user.id.startsWith("student-");
+    if (!isStudent) {
+      toast.error("Reports are only available for students.");
+      return;
+    }
+
+    try {
+      const response = await api.get(`/attendance/export?student_id=${user.realId}&format=csv`, {
+        responseType: 'blob'
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `report_${user.name.replace(/\s+/g, '_')}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      toast.success("Report downloaded");
+    } catch (err) {
+      toast.error("Failed to download report");
+    }
+  };
+
   return (
     <div className="p-6 pt-8 pb-24">
       {/* Header */}
@@ -160,8 +207,8 @@ const Users = () => {
                 key={option.id}
                 onClick={() => setSortOrder(option.id)}
                 className={`text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-all ${sortOrder === option.id
-                    ? "bg-primary border-primary text-white shadow-lg shadow-primary/20"
-                    : "border-white/5 text-gray-500 bg-card-bg hover:border-white/10"
+                  ? "bg-primary border-primary text-white shadow-lg shadow-primary/20"
+                  : "border-white/5 text-gray-500 bg-card-bg hover:border-white/10"
                   }`}
               >
                 {option.label}
@@ -264,13 +311,27 @@ const Users = () => {
                 </div>
               </div>
 
-              {user.alert ? (
-                <button className="bg-primary/20 text-primary w-8 h-8 rounded-full flex items-center justify-center">
-                  <Plus size={16} />
-                </button>
-              ) : (
+              <div className="flex items-center gap-1">
+                {user.id.startsWith("student-") && (
+                  <>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleDownloadReport(user); }}
+                      className="p-2 text-gray-500 hover:text-primary transition-colors"
+                      title="Download Report"
+                    >
+                      <Download size={16} />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleDelete(user); }}
+                      className="p-2 text-gray-500 hover:text-red-500 transition-colors"
+                      title="Delete Student"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </>
+                )}
                 <ChevronRight size={16} className="text-gray-600" />
-              )}
+              </div>
             </Card>
           ))
         )}

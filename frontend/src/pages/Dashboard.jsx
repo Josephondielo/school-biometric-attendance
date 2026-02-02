@@ -184,10 +184,10 @@ const Dashboard = () => {
               Late Arrivals
             </p>
             <h4 className="text-2xl font-bold text-white">
-              {loading ? <Skeleton className="h-8 w-12" /> : "0"}
+              {loading ? <Skeleton className="h-8 w-12" /> : stats.late_today || "0"}
             </h4>
             <p className="text-warning text-[10px] mt-1 font-medium">
-              --
+              NEED ATTENTION
             </p>
           </div>
         </Card>

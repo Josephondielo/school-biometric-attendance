@@ -8,14 +8,8 @@ import "./index.css";
 
 function App() {
   useEffect(() => {
-    api
-      .get("/")
-      .then((res) => {
-        console.log("✅ BACKEND CONNECTED:", res.data);
-      })
-      .catch((err) => {
-        console.error("❌ BACKEND NOT CONNECTED:", err);
-      });
+    // Basic connectivity check (optional for production)
+    api.get("/").catch(() => { });
   }, []);
 
   return (
