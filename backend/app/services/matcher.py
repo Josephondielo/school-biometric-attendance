@@ -8,7 +8,7 @@ try:
 except ImportError:
     face_recognition = None
 
-def find_best_match(known_embeddings, unknown_encoding, tolerance=0.6):
+def find_best_match(known_embeddings, unknown_encoding, tolerance=0.45):
     """
     Finds the closest match for an unknown face encoding among a list of known embeddings.
     

@@ -89,9 +89,15 @@ def face_login():
 
     try:
         # 1. Extract encoding from login attempt
-        encoding = get_face_encoding(image)
-        if encoding is None:
+        encoding_result = get_face_encoding(image, is_enrollment=False)
+        
+        if encoding_result is None:
             return jsonify({"error": "No face detected"}), 400
+            
+        if isinstance(encoding_result, dict) and "error" in encoding_result:
+            return jsonify(encoding_result), 400
+            
+        encoding = encoding_result
 
         # 2. Match against system users only
         user_embeddings = Embedding.query.filter(Embedding.user_id.isnot(None)).all()

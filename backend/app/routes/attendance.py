@@ -21,10 +21,17 @@ def verify_attendance():
 
     # 1. Extract face encoding
     try:
-        unknown_encoding = get_face_encoding(image)
-        if unknown_encoding is None:
+        encoding_result = get_face_encoding(image, is_enrollment=False)
+        
+        if encoding_result is None:
             current_app.logger.warning("⚠️ No face detected in scan.")
             return jsonify({"error": "No face detected"}), 400
+            
+        if isinstance(encoding_result, dict) and "error" in encoding_result:
+            current_app.logger.warning(f"⚠️ Quality check failed: {encoding_result['error']}")
+            return jsonify(encoding_result), 400
+            
+        unknown_encoding = encoding_result
     except Exception as e:
         current_app.logger.error(f"❌ Error during face detection: {e}")
         return jsonify({"error": "Face detection failed"}), 500
@@ -109,11 +116,16 @@ def get_stats():
                 "color": "text-success"
             })
 
+        late_count = db.session.query(Attendance.id)\
+            .filter(cast(Attendance.timestamp, Date) == today)\
+            .filter(Attendance.status == "Late").count()
+
         percentage = int((present_count / total_students * 100)) if total_students > 0 else 0
 
         return jsonify({
             "total_students": total_students,
             "present_today": present_count,
+            "late_today": late_count,
             "percentage": percentage,
             "recent_activity": activity_log
         }), 200

@@ -46,14 +46,19 @@ def enroll_student():
             "error": "Student with this admission number already exists"
         }), 409
 
-    # 🧠 Face encoding
+    # 🧠 Face encoding (High-Fidelity)
     try:
-        encoding = get_face_encoding(image)
-        if encoding is None:
+        encoding_result = get_face_encoding(image, is_enrollment=True)
+        
+        if encoding_result is None:
             current_app.logger.warning("⚠️ No face detected in enrollment image.")
-            return jsonify({
-                "error": "No face detected. Use a clear image with one face."
-            }), 400
+            return jsonify({"error": "No face detected. Use a clear image with one face."}), 400
+            
+        if isinstance(encoding_result, dict) and "error" in encoding_result:
+            current_app.logger.warning(f"⚠️ Quality check failed: {encoding_result['error']}")
+            return jsonify(encoding_result), 400
+            
+        encoding = encoding_result
     except Exception as e:
         current_app.logger.error(f"❌ Error encoding face: {e}")
         return jsonify({"error": "Failed to process face image"}), 500
