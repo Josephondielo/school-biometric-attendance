@@ -15,8 +15,9 @@ def get_face_encoding(image_file, is_enrollment=False):
         # Prepare multipart form data
         files = {"image": (image_file.filename, image_file.stream, image_file.content_type)}
         data = {"is_enrollment": str(is_enrollment).lower()}
+        headers = {"X-API-KEY": os.environ.get("BIOMETRIC_API_KEY", "supersecret-key")}
         
-        response = requests.post(f"{service_url}/encode", files=files, data=data, timeout=30)
+        response = requests.post(f"{service_url}/encode", files=files, data=data, headers=headers, timeout=30)
         
         if response.status_code == 200:
             result = response.json()

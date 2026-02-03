@@ -25,7 +25,10 @@ def find_best_match(known_embeddings, unknown_encoding, tolerance=0.45):
             "tolerance": tolerance
         }
         
-        response = requests.post(f"{service_url}/compare", json=payload, timeout=10)
+        # Prepare the request headers
+        headers = {"X-API-KEY": os.environ.get("BIOMETRIC_API_KEY", "supersecret-key")}
+        
+        response = requests.post(f"{service_url}/compare", json=payload, headers=headers, timeout=10)
         
         if response.status_code == 200:
             result = response.json()

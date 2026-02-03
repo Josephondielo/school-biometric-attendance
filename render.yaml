@@ -18,6 +18,8 @@ services:
           type: web
           name: biometric-service
           property: host
+      - key: BIOMETRIC_API_KEY
+        value: "supersecret-key" # Recommended: Change this to a random string
       - key: PORT
         value: 8000
 
@@ -27,6 +29,8 @@ services:
     runtime: docker
     dockerContext: biometric-service
     envVars:
+      - key: BIOMETRIC_API_KEY
+        value: "supersecret-key"
       - key: PORT
         value: 5000
 
