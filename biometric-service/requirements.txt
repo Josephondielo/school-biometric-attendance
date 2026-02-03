@@ -1,0 +1,6 @@
+flask
+face-recognition
+numpy
+waitress
+dlib
+opencv-python-headless
