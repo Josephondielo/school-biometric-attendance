@@ -1,47 +1,43 @@
-try:
-    import numpy as np
-except ImportError:
-    np = None
-
-try:
-    import face_recognition
-except ImportError:
-    face_recognition = None
+import requests
+import os
+import numpy as np
+from flask import current_app
 
 def find_best_match(known_embeddings, unknown_encoding, tolerance=0.45):
     """
-    Finds the closest match for an unknown face encoding among a list of known embeddings.
-    
-    Args:
-        known_embeddings: List of embedding objects (must have .vector attribute as bytes)
-        unknown_encoding: The 128-d numpy array of the face to match
-        tolerance: Distance threshold. Lower is stricter. 0.6 is typical, 0.45-0.5 is safer for high security.
-    
-    Returns:
-        The matching embedding object from the list, or None if no match found.
+    Delegates face comparison to the standalone Biometric Service.
     """
     if not known_embeddings:
-        print("🔍 No known embeddings to match against.")
         return None
         
+    service_url = os.environ.get("BIOMETRIC_SERVICE_URL", "http://127.0.0.1:5000")
+    if not service_url.startswith("http"):
+        service_url = f"http://{service_url}"
+    
     try:
-        known_vectors = [np.frombuffer(e.vector, dtype=np.float64) for e in known_embeddings]
-    except Exception as e:
-        print(f"❌ Error converting embeddings: {e}")
-        return None
-    
-    if not known_vectors:
-        return None
-
-    # Calculate Euclidean distances between the unknown face and all known faces
-    face_distances = face_recognition.face_distance(known_vectors, unknown_encoding)
-    
-    # Find the index of the minimum distance (best match)
-    best_match_index = np.argmin(face_distances)
-    min_distance = face_distances[best_match_index]
-    
-    # Check if the best match is within the tolerance
-    if min_distance < tolerance:
-        return known_embeddings[best_match_index]
+        # Prepare known vectors for JSON serialization
+        known_vectors = [np.frombuffer(e.vector, dtype=np.float64).tolist() for e in known_embeddings]
         
-    return None
+        # Prepare the request body
+        payload = {
+            "unknown": unknown_encoding.tolist() if hasattr(unknown_encoding, "tolist") else unknown_encoding,
+            "knowns": known_vectors,
+            "tolerance": tolerance
+        }
+        
+        response = requests.post(f"{service_url}/compare", json=payload, timeout=10)
+        
+        if response.status_code == 200:
+            result = response.json()
+            match_index = result.get("match_index", -1)
+            
+            if match_index != -1:
+                return known_embeddings[match_index]
+            return None
+        else:
+            current_app.logger.error(f"❌ Biometric Service Error: {response.text}")
+            return None
+            
+    except Exception as e:
+        current_app.logger.error(f"❌ Matcher Service Error: {e}")
+        return None
