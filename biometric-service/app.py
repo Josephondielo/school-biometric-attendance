@@ -7,7 +7,8 @@ app = Flask(__name__)
 # -----------------------------
 # Simple security for ngrok use
 # -----------------------------
-API_KEY = "supersecret-key"  # must match backend header
+import os
+API_KEY = os.environ.get("BIOMETRIC_API_KEY", "supersecret-key")
 
 def authorize(req):
     return req.headers.get("X-API-KEY") == API_KEY
