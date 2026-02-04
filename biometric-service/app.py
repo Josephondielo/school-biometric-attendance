@@ -41,6 +41,7 @@ def encode_face():
         # Quality Validation: resolution
         height, width = image.shape[:2]
         if height < 200 or width < 200:
+            print(f"❌ Rejected: Low resolution ({width}x{height})")
             return jsonify({
                 "error": "Image resolution too low. Minimum 200x200 required."
             }), 400
@@ -53,6 +54,7 @@ def encode_face():
         )
 
         if not face_locations:
+            print("❌ Rejected: No face detected")
             return jsonify({"error": "No face detected"}), 400
 
         # Quality Validation: face size ratio
@@ -61,6 +63,7 @@ def encode_face():
         min_dim = min(height, width)
 
         if face_height < (min_dim * 0.2):
+            print(f"❌ Rejected: Face too small ({face_height}px, min required: {min_dim * 0.2}px)")
             return jsonify({
                 "error": "Face too small or too far away. Please move closer."
             }), 400
