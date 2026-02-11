@@ -13,4 +13,4 @@ COPY . .
 
 # Expose port and start
 EXPOSE 8000
-CMD ["python", "serve.py"]
+CMD ["sh", "-c", "flask db upgrade && python serve.py"]
