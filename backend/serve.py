@@ -7,6 +7,7 @@ app = create_app()
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     print(f"🚀 Production server starting on port {port}...")
+    print("ℹ️  Ensuring database migrations are applied...")
 
 
 
