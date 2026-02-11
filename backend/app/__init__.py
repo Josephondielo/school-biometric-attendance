@@ -10,7 +10,11 @@ def create_app(config_class=Config):
     # Init extensions
     db.init_app(app)
     migrate.init_app(app, db)
-    cors.init_app(app, resources={r"/*": {"origins": "*", "allow_headers": ["Content-Type", "Authorization"]}})
+    cors.init_app(app, resources={r"/*": {
+        "origins": ["http://localhost:5173", "https://school-biometric-attendance-1.onrender.com", "http://localhost:8000"],
+        "allow_headers": ["Content-Type", "Authorization", "ngrok-skip-browser-warning"],
+        "supports_credentials": True
+    }})
     jwt.init_app(app)
 
     # 🛡️ JWT Error Logging

@@ -4,6 +4,7 @@ services:
     name: attendance-api
     runtime: docker
     dockerContext: backend
+    startCommand: "flask db upgrade && python serve.py"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
