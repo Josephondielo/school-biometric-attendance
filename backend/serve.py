@@ -11,4 +11,9 @@ if __name__ == "__main__":
 
 
 
+    # Ensure admin exists
+    from app.utils.bootstrap import create_default_admin
+    with app.app_context():
+        create_default_admin()
+
     serve(app, host="0.0.0.0", port=port)
