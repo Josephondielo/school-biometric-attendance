@@ -52,7 +52,8 @@ const Login = () => {
             // Wait, import api from '../api/client'; needs to be at top.
             // I'll add the function logic here assuming api is available or use fetch with hardcoded URL for safety.
 
-            const response = await fetch(`${config.API_BASE_URL}/auth/face-login`, {
+            // Use the Biometric API URL for face login
+            const response = await fetch(`${config.BIOMETRIC_API_URL}/auth/face-login`, {
                 method: "POST",
                 body: formData
             });

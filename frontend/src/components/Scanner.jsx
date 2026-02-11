@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import config from "../config";
 
-const BACKEND_URL = config.API_BASE_URL;
+const BACKEND_URL = config.BIOMETRIC_API_URL;
 
 export default function Scanner() {
   const videoRef = useRef(null);
