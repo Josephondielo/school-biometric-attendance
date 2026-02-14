@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 from app.extensions import db
 from app.models.student import Student
@@ -18,10 +18,9 @@ def enroll_student():
     ADMIN ONLY
     """
 
-    # ✅ READ ROLE DIRECTLY FROM JWT
-    identity = get_jwt_identity()
-
-    if identity.get("role") != "admin":
+    # ✅ READ ROLE FROM JWT CLAIMS
+    claims = get_jwt()
+    if claims.get("role") != "admin":
         return jsonify({"error": "Admin access required"}), 403
 
     # 📩 Form data
@@ -157,8 +156,8 @@ def delete_student(student_id):
     Delete a student and all associated records (Attendances, Embeddings).
     ADMIN ONLY
     """
-    identity = get_jwt_identity()
-    if identity.get("role") != "admin":
+    claims = get_jwt()
+    if claims.get("role") != "admin":
         return jsonify({"error": "Admin access required"}), 403
 
     try:

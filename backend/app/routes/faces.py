@@ -59,7 +59,7 @@ def register_user_face():
     Uses the identity from the current JWT token.
     """
     identity = get_jwt_identity()
-    user_id = identity.get("id")
+    user_id = identity # Identity is now the user_id string
     image = request.files.get("image")
 
     if not image:

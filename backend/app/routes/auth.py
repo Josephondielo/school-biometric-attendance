@@ -42,9 +42,10 @@ def login():
             return jsonify({"error": "Invalid credentials"}), 401
 
         access_token = create_access_token(
-            identity={
-                "id": user.id,
-                "role": user.role
+            identity=str(user.id),
+            additional_claims={
+                "role": user.role,
+                "username": user.username
             }
         )
         
@@ -115,9 +116,10 @@ def face_login():
 
         # 4. Generate JWT
         access_token = create_access_token(
-            identity={
-                "id": user.id,
-                "role": user.role
+            identity=str(user.id),
+            additional_claims={
+                "role": user.role,
+                "username": user.username
             }
         )
 
